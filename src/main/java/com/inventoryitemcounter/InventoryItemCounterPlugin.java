@@ -52,10 +52,13 @@ public class InventoryItemCounterPlugin extends Plugin
 	@Subscribe
 	public void onConfigChanged(ConfigChanged event)
 	{
-		if (event.getGroup().equals("itemcounter"))
+		String name = event.getGroup();
+		if (!event.getGroup().equals("inventoryitemcounter"))
 		{
-			updateParsedLists();
+			return;
 		}
+
+		updateParsedLists();
 	}
 
 	private void updateParsedLists()
@@ -78,7 +81,7 @@ public class InventoryItemCounterPlugin extends Plugin
 	}
 
 	@Provides
-	InventoryItemCounterConfig provideConfig(ConfigManager configManager)
+	InventoryItemCounterConfig getConfig(ConfigManager configManager)
 	{
 		return configManager.getConfig(InventoryItemCounterConfig.class);
 	}
