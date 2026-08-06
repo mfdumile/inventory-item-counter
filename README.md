@@ -1,6 +1,6 @@
 # Inventory Item Counter
 
-**Inventory Item Counter** is a RuneLite plugin designed to visually overlay sequential counts onto your inventory items. It counts each item type independently, making it easy to manage your inventory at a glance (e.g., *Bucket 1, Hammer 1, Bucket 2, Bucket 3, Bucket 4 *).
+**Inventory Item Counter** is a RuneLite plugin designed to visually overlay sequential counts onto your inventory items. It counts each item type independently, making it easy to manage your inventory at a glance (e.g., *Bucket 1, Hammer 1, Bucket 2, Bucket 3, Bucket 4*).
 
 ---
 
