@@ -9,7 +9,7 @@ import java.util.HashMap;
 import java.util.Map;
 import javax.inject.Inject;
 import net.runelite.api.Client;
-import net.runelite.api.InventoryID;
+import net.runelite.api.gameval.InventoryID;
 import net.runelite.api.Item;
 import net.runelite.api.ItemContainer;
 import net.runelite.api.ItemComposition;
@@ -41,7 +41,7 @@ public class InventoryItemCounterOverlay extends WidgetItemOverlay
     @Override
     public void renderItemOverlay(Graphics2D graphics, int itemId, WidgetItem widgetItem)
     {
-        ItemContainer inventory = client.getItemContainer(InventoryID.INVENTORY);
+        ItemContainer inventory = client.getItemContainer(InventoryID.INV);
         if (inventory == null || widgetItem.getWidget() == null)
         {
             return;
@@ -52,7 +52,6 @@ public class InventoryItemCounterOverlay extends WidgetItemOverlay
         {
             return;
         }
-
 
         int currentTick = client.getTickCount();
         if (currentTick != lastTick)
@@ -78,7 +77,7 @@ public class InventoryItemCounterOverlay extends WidgetItemOverlay
         graphics.setColor(Color.BLACK);
         graphics.drawString(text, x + 1, y + 1);
 
-        graphics.setColor(java.awt.Color.YELLOW);
+        graphics.setColor(Color.YELLOW);
         graphics.drawString(text, x, y);
     }
 
@@ -114,8 +113,11 @@ public class InventoryItemCounterOverlay extends WidgetItemOverlay
                 continue;
             }
 
-            int currentCount = runningCounts.getOrDefault(itemName, 0) + 1;
-            runningCounts.put(itemName, currentCount);
+            // Si el ítem está en el Merge Map, se agrupa bajo la misma clave compartida
+            String countKey = plugin.getMergeMap().getOrDefault(itemName, itemName);
+
+            int currentCount = runningCounts.getOrDefault(countKey, 0) + 1;
+            runningCounts.put(countKey, currentCount);
             slotCounts[i] = currentCount;
         }
     }
