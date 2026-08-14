@@ -28,4 +28,15 @@ public interface InventoryItemCounterConfig extends Config
 	{
 		return "";
 	}
+
+	@ConfigItem(
+			keyName = "mergelist",
+			name = "Merge list",
+			description = "Items that will be counted together built in arrays separated by commas (eg: [Raw salmon, Salmon], [Bucket, Bucket of sand]).",
+			position = 3
+	)
+	default String mergelist()
+	{
+		return "";
+	}
 }
