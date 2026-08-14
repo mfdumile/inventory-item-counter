@@ -15,27 +15,30 @@ import net.runelite.api.ItemContainer;
 import net.runelite.api.ItemComposition;
 import net.runelite.api.widgets.WidgetItem;
 import net.runelite.client.game.ItemManager;
-import net.runelite.client.ui.overlay.WidgetItemOverlay;
 import net.runelite.client.ui.FontManager;
+import net.runelite.client.ui.overlay.WidgetItemOverlay;
 
 public class InventoryItemCounterOverlay extends WidgetItemOverlay
 {
     private final Client client;
     private final InventoryItemCounterPlugin plugin;
     private final ItemManager itemManager;
-    private final FontManager fontManager;
 
     private int lastTick = -1;
     private final int[] slotCounts = new int[28];
 
     @Inject
-    public InventoryItemCounterOverlay(Client client, InventoryItemCounterPlugin plugin, ItemManager itemManager, FontManager fontManager)
+    public InventoryItemCounterOverlay(Client client, InventoryItemCounterPlugin plugin, ItemManager itemManager)
     {
-        this.fontManager = fontManager;
         this.client = client;
         this.plugin = plugin;
         this.itemManager = itemManager;
         showOnInventory();
+    }
+
+    public void invalidateCache()
+    {
+        this.lastTick = -1;
     }
 
     @Override
@@ -73,7 +76,7 @@ public class InventoryItemCounterOverlay extends WidgetItemOverlay
         int x = (int) bounds.getMaxX() - fm.stringWidth(text) - 2;
         int y = (int) bounds.getMaxY() - 2;
 
-        graphics.setFont(fontManager.getRunescapeBoldFont());
+        graphics.setFont(FontManager.getRunescapeBoldFont());
         graphics.setColor(Color.BLACK);
         graphics.drawString(text, x + 1, y + 1);
 
@@ -96,11 +99,6 @@ public class InventoryItemCounterOverlay extends WidgetItemOverlay
             }
 
             ItemComposition comp = itemManager.getItemComposition(item.getId());
-            if (comp == null)
-            {
-                continue;
-            }
-
             String itemName = comp.getName().toLowerCase();
 
             if (plugin.getBlacklist().contains(itemName))
@@ -113,7 +111,6 @@ public class InventoryItemCounterOverlay extends WidgetItemOverlay
                 continue;
             }
 
-            // Si el ítem está en el Merge Map, se agrupa bajo la misma clave compartida
             String countKey = plugin.getMergeMap().getOrDefault(itemName, itemName);
 
             int currentCount = runningCounts.getOrDefault(countKey, 0) + 1;

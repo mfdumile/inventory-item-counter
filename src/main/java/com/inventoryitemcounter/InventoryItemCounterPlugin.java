@@ -44,22 +44,23 @@ public class InventoryItemCounterPlugin extends Plugin
 	private Map<String, String> mergeMap = Collections.emptyMap();
 
 	@Override
-	protected void startUp() throws Exception
+	protected void startUp()
 	{
 		updateParsedLists();
 		overlayManager.add(overlay);
 	}
 
 	@Override
-	protected void shutDown() throws Exception
+	protected void shutDown()
 	{
 		overlayManager.remove(overlay);
 	}
 
 	@Subscribe
+	@SuppressWarnings("unused")
 	public void onConfigChanged(ConfigChanged event)
 	{
-		if (!event.getGroup().equals("inventoryitemcounter"))
+		if (!"inventoryitemcounter".equals(event.getGroup()))
 		{
 			return;
 		}
@@ -72,6 +73,11 @@ public class InventoryItemCounterPlugin extends Plugin
 		this.whitelist = parseList(config.whitelist());
 		this.blacklist = parseList(config.blacklist());
 		this.mergeMap = parseMergeMap(config.mergelist());
+
+		if (overlay != null)
+		{
+			overlay.invalidateCache();
+		}
 	}
 
 	private List<String> parseList(String input)
@@ -95,7 +101,7 @@ public class InventoryItemCounterPlugin extends Plugin
 		}
 
 		Map<String, String> map = new HashMap<>();
-		Matcher matcher = Pattern.compile("\\[(.*?)\\]").matcher(input);
+		Matcher matcher = Pattern.compile("\\[(.*?)]").matcher(input);
 
 		while (matcher.find())
 		{
@@ -126,6 +132,7 @@ public class InventoryItemCounterPlugin extends Plugin
 	}
 
 	@Provides
+	@SuppressWarnings("unused")
 	InventoryItemCounterConfig getConfig(ConfigManager configManager)
 	{
 		return configManager.getConfig(InventoryItemCounterConfig.class);
